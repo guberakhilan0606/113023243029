@@ -8,7 +8,7 @@ const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiYXVkIjoi
 function App() {
   const [notes, setNotes] = useState([]);
 
-  useEffect(() => {
+  const fetchNotifications = () => {
     Log("frontend", "info", "api", "Fetching notifications");
 
     axios
@@ -24,12 +24,23 @@ function App() {
       .catch(() => {
         Log("frontend", "error", "api", "Failed to fetch notifications");
       });
+  };
+
+  useEffect(() => {
+    fetchNotifications();
   }, []);
 
   return (
     <div style={{ padding: "20px" }}>
       <h1>Campus Notifications</h1>
       <p>Total notifications: {notes.length}</p>
+
+      <button onClick={fetchNotifications}>
+        Refresh Notifications
+      </button>
+
+      <br />
+      <br />
 
       {notes.map((item) => (
         <div
@@ -39,6 +50,12 @@ function App() {
             padding: "12px",
             marginBottom: "10px",
             borderRadius: "6px",
+            backgroundColor:
+              item.Type === "Placement"
+                ? "#d4edda"
+                : item.Type === "Result"
+                ? "#fff3cd"
+                : "#d1ecf1",
           }}
         >
           <b>{item.Type}</b>
